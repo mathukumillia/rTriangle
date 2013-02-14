@@ -7,10 +7,11 @@
 
 import java.awt.Graphics;
 import java.awt.Polygon;
+import java.awt.Color;
 
 public class rTriangle{
 	
-	private int centerx, centery, x, y, z, depth;
+	private int centerx, centery, x, y, z, depth, x1, x2, x3, y1, y2, y3;
 	private Graphics g;
 
 	public static final int MAX_DEPTH = 7;
@@ -26,11 +27,22 @@ public class rTriangle{
 
 		centerx = width/2;
 		centery = height/2;
-		x = (int)(0.9 * (Math.min(width/2, height/2)));
+		x = (int)(0.8 * (Math.min(width/2, height/2)));
 		y = (int)(x * Math.sin(Math.PI/6));
 		z = (int)(Math.sqrt((x*x) - (y*y)));
-		System.out.println("centerx: " + centerx + " centery: " + centery + " x: " + x + " y: "+ y + " z: " + z);
+		System.out.println("x: " + x);
+		System.out.println("y: " + y);
+		System.out.println("z: " + z);
+		System.out.println("centerx: " + centerx);
+		System.out.println("centery: " + centery);
 		this.depth = 1;
+
+		x1 = centerx - z;
+		y1 = centery + y;
+		x2 = centerx;
+		y2 = centery - x;
+		x3 = centerx + z;
+		y3 = centery + y;
 		
 	}
 
@@ -96,14 +108,6 @@ public class rTriangle{
 	 */
 	private void recursiveDraw(int n){
 		//base case
-		
-		int x1 = centerx - z;
-		int y1 = centery + y;
-		int x2 = centerx;
-		int y2 = centery - x;
-		int x3 = centerx + z;
-		int y3 = centery + y;
-
 		if(n <= 0){
 			return;
 		}
@@ -112,9 +116,33 @@ public class rTriangle{
 		t.addPoint(x1, y1);
 		t.addPoint(x2, y2);
 		t.addPoint(x3, y3);
+		g.setColor(Color.black);
+		g.drawPolygon(t);
+		g.setColor(Color.white);
 		g.fillPolygon(t);
 		
+		int tempx = x1;
+		int tempy = y1;
+			//System.out.println("previous x1: " + x1);
+		x1 = (x2 + x1)/2;
+			//System.out.println("processed x1: " + x1);
+			//System.out.println("previous y1: " + y1);
+		y1 = (y2 + y1)/2;
+			//System.out.println("processed y1: " + y1);
+			//System.out.println("previous x2: " + x2);
+		x2 = (x3 + x2)/2;
+			//System.out.println("processed x2: " + x2);
+			//System.out.println("previous y2: " + y2);
+		y2 = (y3 + y2)/2;
+			//System.out.println("processed y2: " + y2);
+			//System.out.println("previous x3: " + x3);
+		x3 = (tempx + x3)/2;
+			//System.out.println("processed x3: " + x3);
+			//System.out.println("previous y3: " + y3);
+		y3 = (tempy + y3)/2;
+			//System.out.println("processed y3: " + y3);
+			//System.out.println();	
 
 		recursiveDraw(n-1);
-	}
+	} 
 }
