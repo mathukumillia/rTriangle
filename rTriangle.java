@@ -6,10 +6,11 @@
  */
 
 import java.awt.Graphics;
+import java.awt.Polygon;
 
 public class rTriangle{
 	
-	private int x1, y1, x2, y2, x3, y3, depth;
+	private int centerx, centery, x, y, z, depth;
 	private Graphics g;
 
 	public static final int MAX_DEPTH = 7;
@@ -21,60 +22,38 @@ public class rTriangle{
 	 * 		@param y - center y position of the htree 
 	 * 		@param length - length of the largest H's middle bar
 	 */
-	public rTriangle(int x1, int y1, int x2, int y2, int x3, int y3){
+	public rTriangle(int a, int b, int width, int height){
 
-		this.x1 = x1;
-		this.y1 = y1;
-		this.x2 = x2;
-		this.y2 = y2;
-		this.x3 = x3;
-		this.y3 = y3;
+		centerx = width/2;
+		centery = height/2;
+		x = (int)(0.9 * (Math.min(width/2, height/2)));
+		y = (int)(x * Math.sin(Math.PI/6));
+		z = (int)(Math.sqrt((x*x) - (y*y)));
+		System.out.println("centerx: " + centerx + " centery: " + centery + " x: " + x + " y: "+ y + " z: " + z);
 		this.depth = 1;
+		
 	}
 
 	/**
-	 *   getters and setters
+	 *   getters(setters are not useful)
 	 */
 	
-	public void setX1(int x){
-		this.x1 = x;
+	public int getCenterX(){
+		return centerx;
 	}
-	public int getX1(){
-		return x1;
+	public int getCenterY(){
+		return centery;
 	}
-	public void setX2(int x){
-		this.x2 = x;
+	public int getX(){
+		return x;
 	}
-	public int getX2(){
-		return x2;
+	public int getY(){
+		return y;
 	}
-	public void setX3(int x){
-		this.x3 = x;
+	public int getZ(){
+		return z;
 	}
-	public int getX3(){
-		return x3;
-	}
-	public void setY1(int y){
-		this.y1 = y;
-	}
-	public int getY1(){
-		return y1;
-	}
-	public void setY2(int y){
-		this.y2 = y;
-	}
-	public int getY2(){
-		return y2;
-	}
-	public void setY3(int y){
-		this.y3 = y;
-	}
-	public int getY3(){
-		return y3;
-	}
-	public int getDepth(){
-		return depth;
-	}
+	
 
 	/**
 	 * incrementDepth
@@ -99,7 +78,7 @@ public class rTriangle{
 	 */
 	public void draw(Graphics g){
 		this.g = g;
-		recursiveDraw(depth, x1, y1, x2, y2, x3, y3);
+		recursiveDraw(depth);
 	}
 
 	/**
@@ -115,27 +94,27 @@ public class rTriangle{
 	 * precondition - g must not be null
 	 *  
 	 */
-	private void recursiveDraw(int n, int x1, int y1, int x2, int y2, int x3, int y3){
+	private void recursiveDraw(int n){
 		//base case
+		
+		int x1 = centerx - z;
+		int y1 = centery + y;
+		int x2 = centerx;
+		int y2 = centery - x;
+		int x3 = centerx + z;
+		int y3 = centery + y;
+
 		if(n <= 0){
 			return;
 		}
 
-		int tempx;
-		int tempy;
-		//find midpoint of existing three sides
-		tempx = x1;
-		tempy = y1;
-		x1 = ((x1 + x2) / 2);
-		y1 = ((y1 + y2) / 2);
-		x2 = ((x2 + x3) / 2);
-		y2 = ((y2 + y3) / 2);
-		x3 = ((x3 + tempx) / 2);
-		y3 = ((y1 + tempy) / 2);
-		g.drawLine(x1, y1, x2, y2);
-		g.drawLine(x2, y2, x3, y3);
-		g.drawLine(x3, y3, x1, y1);
+		Polygon t = new Polygon();
+		t.addPoint(x1, y1);
+		t.addPoint(x2, y2);
+		t.addPoint(x3, y3);
+		g.fillPolygon(t);
+		
 
-		recursiveDraw(n-1, x1, y1, x2, y2, x3, y3);
+		recursiveDraw(n-1);
 	}
 }
