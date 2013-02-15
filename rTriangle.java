@@ -11,7 +11,9 @@ import java.awt.Color;
 
 public class rTriangle{
 	
-	private int centerx, centery, x, y, z, depth, x1, x2, x3, y1, y2, y3;
+	private int centerx, centery, x, y, z, depth;
+	private int[] coord = new int[6];
+	private int[] sCoord = new int[6];
 	private Graphics g;
 
 	public static final int MAX_DEPTH = 7;
@@ -19,30 +21,24 @@ public class rTriangle{
 	/**
 	 * constructor
 	 *
-	 * 		@param x - center x position of the htree 
-	 * 		@param y - center y position of the htree 
-	 * 		@param length - length of the largest H's middle bar
+	 * 		@param width - width of the window
+	 * 		@param height - height of the window 
 	 */
-	public rTriangle(int a, int b, int width, int height){
+	public rTriangle(int width, int height){
 
 		centerx = width/2;
 		centery = height/2;
 		x = (int)(0.8 * (Math.min(width/2, height/2)));
 		y = (int)(x * Math.sin(Math.PI/6));
 		z = (int)(Math.sqrt((x*x) - (y*y)));
-		System.out.println("x: " + x);
-		System.out.println("y: " + y);
-		System.out.println("z: " + z);
-		System.out.println("centerx: " + centerx);
-		System.out.println("centery: " + centery);
 		this.depth = 1;
 
-		x1 = centerx - z;
-		y1 = centery + y;
-		x2 = centerx;
-		y2 = centery - x;
-		x3 = centerx + z;
-		y3 = centery + y;
+		coord[0] = centerx - z;
+		coord[1] = centery + y;
+		coord[2] = centerx;
+		coord[3] = centery - x;
+		coord[4] = centerx + z;
+		coord[5] = centery + y;
 		
 	}
 
@@ -90,7 +86,7 @@ public class rTriangle{
 	 */
 	public void draw(Graphics g){
 		this.g = g;
-		recursiveDraw(depth);
+		recursiveDraw(depth, coord[0], coord[1], coord[2], coord[3], coord[4], coord[5], Color.white);
 	}
 
 	/**
@@ -101,12 +97,13 @@ public class rTriangle{
 	 * @param x1, y1 - coordinates of starting bottom left point
 	 * @param x2, y2 - coordinates of starting top point
 	 * @param x3, y3 - coordinates of starting bottom right point
+	 * @param color - color of the triangle being painted
 	 * 
 	 *
 	 * precondition - g must not be null
 	 *  
 	 */
-	private void recursiveDraw(int n){
+	private void recursiveDraw(int n, int x1, int y1, int x2, int y2, int x3, int y3, Color color){
 		//base case
 		if(n <= 0){
 			return;
@@ -118,31 +115,53 @@ public class rTriangle{
 		t.addPoint(x3, y3);
 		g.setColor(Color.black);
 		g.drawPolygon(t);
-		g.setColor(Color.white);
+		g.setColor(color);
 		g.fillPolygon(t);
 		
+		sCoord[0] = (x2 + x1)/2;
+		sCoord[1] = (y2 + y1)/2;	
+		sCoord[2] = (x3 + x2)/2;
+		sCoord[3] = (y3 + y2)/2;
+		sCoord[4] = (x1 + x3)/2;
+		sCoord[5] = (y1 + y3)/2;
+
+		System.out.println("n = " + n);
+			
+		for(int i = 0; i<sCoord.length; i++){
+			System.out.println("sCoord of " + i + " is " + sCoord[i]);
+		} 
+		System.out.println();
+		System.out.println();
+		
+		int[] sTri = drawTriangle(x1, y1, sCoord[0], sCoord[1], sCoord[4], sCoord[5], Color.red);
+		Polygon p = new Polygon();
+		p.addPoint(sTri[0], sTri[1]);
+		p.addPoint(sTri[2], sTri[3]);
+		p.addPoint(sTri[4], sTri[5]);
+		System.out.println("This should be drawing");
+		g.setColor(Color.black);
+		g.drawPolygon(t);
+		g.setColor(color);
+		g.fillPolygon(t);
+
+		recursiveDraw(n-1, sCoord[0], sCoord[1], sCoord[2], sCoord[3], sCoord[4], sCoord[5], Color.white);	
+		
+		recursiveDraw(n-1, sCoord[0], sCoord[1], x2, y2, sCoord[2], sCoord[3], Color.white);
+		// recursiveDraw(n-1, sCoord[4], sCoord[5], sCoord[2], sCoord[3], x3, y3);
+	} 
+	public int[] drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color){
 		int tempx = x1;
 		int tempy = y1;
-			//System.out.println("previous x1: " + x1);
-		x1 = (x2 + x1)/2;
-			//System.out.println("processed x1: " + x1);
-			//System.out.println("previous y1: " + y1);
-		y1 = (y2 + y1)/2;
-			//System.out.println("processed y1: " + y1);
-			//System.out.println("previous x2: " + x2);
-		x2 = (x3 + x2)/2;
-			//System.out.println("processed x2: " + x2);
-			//System.out.println("previous y2: " + y2);
-		y2 = (y3 + y2)/2;
-			//System.out.println("processed y2: " + y2);
-			//System.out.println("previous x3: " + x3);
-		x3 = (tempx + x3)/2;
-			//System.out.println("processed x3: " + x3);
-			//System.out.println("previous y3: " + y3);
-		y3 = (tempy + y3)/2;
-			//System.out.println("processed y3: " + y3);
-			//System.out.println();	
+		int[] sTri = new int[6];
 
-		recursiveDraw(n-1);
-	} 
+		System.out.println("This is the draw triangle method");
+		sTri[0] = (x2 + x1)/2;
+		sTri[1] = (y2 + y1)/2;	
+		sTri[2] = (x3 + x2)/2;
+		sTri[3] = (y3 + y2)/2;
+		sTri[4] = (x1 + x3)/2;
+		sTri[5] = (y1 + y3)/2;
+
+		return sTri;
+	}
 }

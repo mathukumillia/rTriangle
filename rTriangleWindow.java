@@ -60,7 +60,7 @@ class rTriangleWindow extends JFrame implements MouseListener {
 		buffer.clearRect(0,0,b.width,b.height); 
 		
 		if (triangle == null) { // tree not created yet 
-			triangle = new rTriangle((int)(b.getBounds().getX()),(int)(b.getBounds().getY()), b.width, b.height);
+			triangle = new rTriangle(b.width, b.height);
 		} else {
 			//triangle.setX1(b.width / 2);
 			//triangle.setY1(b.height / 2 + 12);
