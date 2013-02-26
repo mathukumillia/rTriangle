@@ -39,6 +39,8 @@ public class rTriangle{
 		coord[3] = centery - x;
 		coord[4] = centerx + z;
 		coord[5] = centery + y;
+
+		sCoord = drawTriangle(coord[0], coord[1], coord[2], coord[3], coord[4], coord[5]);
 		
 	}
 
@@ -86,7 +88,17 @@ public class rTriangle{
 	 */
 	public void draw(Graphics g){
 		this.g = g;
-		recursiveDraw(depth, coord[0], coord[1], coord[2], coord[3], coord[4], coord[5], Color.white);
+		int x1 = sCoord[0];
+		int y1 = sCoord[1];
+		int x2 = sCoord[2];
+		int y2 = sCoord[3];
+		int x3 = sCoord[4];
+		int y3 = sCoord[5];
+		sCoord = drawTriangle(x1,y1,x2,y2,x3,y3);
+		//recursiveDraw(depth, coord[0], coord[1], coord[2], coord[3], coord[4], coord[5], Color.white);
+		//recursiveDraw(depth, x1, y1, sCoord[0], sCoord[1], sCoord[4], sCoord[5], Color.white);
+		recursiveDraw(depth, sCoord[0], sCoord[1], x2, y2, sCoord[2], sCoord[3], Color.white);
+		//recursiveDraw(depth, sCoord[4], sCoord[5], sCoord[2], sCoord[3], x3, y3, Color.white);
 	}
 
 	/**
@@ -132,24 +144,10 @@ public class rTriangle{
 		} 
 		System.out.println();
 		System.out.println();
-		
-		int[] sTri = drawTriangle(x1, y1, sCoord[0], sCoord[1], sCoord[4], sCoord[5], Color.red);
-		Polygon p = new Polygon();
-		p.addPoint(sTri[0], sTri[1]);
-		p.addPoint(sTri[2], sTri[3]);
-		p.addPoint(sTri[4], sTri[5]);
-		System.out.println("This should be drawing");
-		g.setColor(Color.black);
-		g.drawPolygon(t);
-		g.setColor(color);
-		g.fillPolygon(t);
 
 		recursiveDraw(n-1, sCoord[0], sCoord[1], sCoord[2], sCoord[3], sCoord[4], sCoord[5], Color.white);	
-		
-		recursiveDraw(n-1, sCoord[0], sCoord[1], x2, y2, sCoord[2], sCoord[3], Color.white);
-		// recursiveDraw(n-1, sCoord[4], sCoord[5], sCoord[2], sCoord[3], x3, y3);
 	} 
-	public int[] drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color){
+	public int[] drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3){
 		int tempx = x1;
 		int tempy = y1;
 		int[] sTri = new int[6];
