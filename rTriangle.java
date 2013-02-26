@@ -95,9 +95,9 @@ public class rTriangle{
 		int x3 = sCoord[4];
 		int y3 = sCoord[5];
 		sCoord = drawTriangle(x1,y1,x2,y2,x3,y3);
-		//recursiveDraw(depth, coord[0], coord[1], coord[2], coord[3], coord[4], coord[5], Color.white);
-		//recursiveDraw(depth, x1, y1, sCoord[0], sCoord[1], sCoord[4], sCoord[5], Color.white);
-		recursiveDraw(depth, sCoord[0], sCoord[1], x2, y2, sCoord[2], sCoord[3], Color.white);
+		recursiveDraw(depth, coord[0], coord[1], coord[2], coord[3], coord[4], coord[5], Color.white);
+		recursiveDraw(depth, x1, y1, sCoord[0], sCoord[1], sCoord[4], sCoord[5], Color.white);
+		//recursiveDraw(depth, sCoord[0], sCoord[1], x2, y2, sCoord[2], sCoord[3], Color.white);
 		//recursiveDraw(depth, sCoord[4], sCoord[5], sCoord[2], sCoord[3], x3, y3, Color.white);
 	}
 
@@ -130,12 +130,7 @@ public class rTriangle{
 		g.setColor(color);
 		g.fillPolygon(t);
 		
-		sCoord[0] = (x2 + x1)/2;
-		sCoord[1] = (y2 + y1)/2;	
-		sCoord[2] = (x3 + x2)/2;
-		sCoord[3] = (y3 + y2)/2;
-		sCoord[4] = (x1 + x3)/2;
-		sCoord[5] = (y1 + y3)/2;
+		sCoord = drawTriangle(x1, y1, x2, y2, x3, y3);
 
 		System.out.println("n = " + n);
 			
